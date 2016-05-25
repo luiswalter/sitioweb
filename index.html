@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset=utf-8 />
-<title>A simple map</title>
+<title>UTFGrid interactivity from multiple layers</title>
 <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
 <script src='https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.js'></script>
 <link href='https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.css' rel='stylesheet' />
@@ -14,11 +14,23 @@
 <body>
 
 
-<div id='map'></div>
+<div id='map' class='dark'></div>
 <script>
 L.mapbox.accessToken = 'pk.eyJ1IjoibHVpc2FsYW55YSIsImEiOiJxYVJhTDZzIn0.pU5qf0yxjja5bcSQFo-WPg';
-var map = L.mapbox.map('map', 'mapbox.streets')
-    .setView([40, -74.50], 9);
+var map = L.mapbox.map('map', 'mapbox.outdoors')
+    .setView([40, -100], 4);
+
+// Pulling multiple layers of interactivity isn't too tricky, it
+// just requires that you don't use compositing, and instead add each
+// layer as its components: a tileLayer, a gridLayer, and a gridControl
+var birdTiles = L.mapbox.tileLayer('examples.map-8ced9urs').addTo(map),
+    nprTiles = L.mapbox.tileLayer('examples.npr-stations').addTo(map);
+
+var nprGrid = L.mapbox.gridLayer('examples.npr-stations').addTo(map),
+    birdGrid = L.mapbox.gridLayer('examples.map-8ced9urs').addTo(map);
+
+var nprControl = L.mapbox.gridControl(nprGrid).addTo(map),
+    birdControl = L.mapbox.gridControl(birdGrid).addTo(map);
 </script>
 
 
